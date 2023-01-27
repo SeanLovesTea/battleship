@@ -8,6 +8,7 @@ const shipMethods = {
 }
 
 function createShip (length) {
+  console.log('ship module')
   const ship = Object.create(shipMethods)
   ship.length = length
   ship.hitCount = 0
@@ -23,3 +24,5 @@ console.log(medShip)
 largeShip.hit()
 largeShip.hit()
 console.log(largeShip)
+
+export { shipMethods, createShip }
