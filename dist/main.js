@@ -19,6 +19,17 @@ eval("/* module decorator */ module = __webpack_require__.nmd(module);\nvar __WE
 
 /***/ }),
 
+/***/ "./src/gameboard.js":
+/*!**************************!*\
+  !*** ./src/gameboard.js ***!
+  \**************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (/* binding */ createBoard)\n/* harmony export */ });\nconst size = 10\n\nfunction createBoard (grid, squares) {\n  for (let i = 0; i < size * size; i++) {\n    const square = document.createElement('div')\n    square.classList = 'square'\n    square.dataset.id = i\n    grid.appendChild(square)\n    squares.push(square)\n  }\n}\n\n\n//# sourceURL=webpack://battleship/./src/gameboard.js?");
+
+/***/ }),
+
 /***/ "./src/index.js":
 /*!**********************!*\
   !*** ./src/index.js ***!
@@ -26,7 +37,7 @@ eval("/* module decorator */ module = __webpack_require__.nmd(module);\nvar __WE
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! lodash */ \"./node_modules/lodash/lodash.js\");\n/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var _ship__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ship */ \"./src/ship.js\");\n// eslint-disable-next-line no-unused-vars\n\n\n\nconst smallShip = (0,_ship__WEBPACK_IMPORTED_MODULE_1__.createShip)(2)\nconst medShip = (0,_ship__WEBPACK_IMPORTED_MODULE_1__.createShip)(3)\nconst largeShip = (0,_ship__WEBPACK_IMPORTED_MODULE_1__.createShip)(5)\nconsole.log(smallShip.randomFunction())\nconsole.log(medShip)\nlargeShip.hitAndSink()\nlargeShip.hitAndSink()\nlargeShip.hitAndSink()\nlargeShip.hitAndSink()\nlargeShip.hitAndSink()\nlargeShip.hitAndSink()\nconsole.log(largeShip)\nconsole.log('index.js')\n\n\n//# sourceURL=webpack://battleship/./src/index.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! lodash */ \"./node_modules/lodash/lodash.js\");\n/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var _ship__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ship */ \"./src/ship.js\");\n/* harmony import */ var _gameboard__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./gameboard */ \"./src/gameboard.js\");\n// eslint-disable-next-line no-unused-vars\n\n\n\n\nconst container = document.querySelector('.container')\nconst userGrid = document.createElement('div')\nconst compGrid = document.createElement('div')\nuserGrid.classList.add('grid-user')\nuserGrid.classList.add('battleship-grid')\ncompGrid.classList.add('battleship-grid')\ncompGrid.classList.add('grid-user')\ncontainer.appendChild(userGrid)\ncontainer.appendChild(compGrid)\n\nconst userSquare = []\nconst compSquare = []\n\n;(0,_gameboard__WEBPACK_IMPORTED_MODULE_2__[\"default\"])(userGrid, userSquare)\n;(0,_gameboard__WEBPACK_IMPORTED_MODULE_2__[\"default\"])(compGrid, compSquare)\n\nconst smallShip = (0,_ship__WEBPACK_IMPORTED_MODULE_1__.createShip)(2)\nconst medShip = (0,_ship__WEBPACK_IMPORTED_MODULE_1__.createShip)(3)\nconst largeShip = (0,_ship__WEBPACK_IMPORTED_MODULE_1__.createShip)(5)\n\nconsole.log(smallShip)\nconsole.log(medShip)\n\nlargeShip.hitAndSink()\nlargeShip.hitAndSink()\nlargeShip.hitAndSink()\nlargeShip.hitAndSink()\nlargeShip.hitAndSink()\nlargeShip.hitAndSink()\n\nconsole.log(largeShip)\n\nconsole.log(userGrid)\n\nconsole.log(largeShip)\n\n\n//# sourceURL=webpack://battleship/./src/index.js?");
 
 /***/ }),
 
@@ -37,7 +48,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var loda
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"createShip\": () => (/* binding */ createShip),\n/* harmony export */   \"shipMethods\": () => (/* binding */ shipMethods)\n/* harmony export */ });\nconst shipMethods = {\n  randomFunction () {\n    return 'random function'\n  },\n  // isSunk () {\n  //   if (this.hitCount >= this.length) {\n  //     this.isSunk = true\n  //   }\n  // },\n  hitAndSink () {\n    if (this.hitCount >= this.length) {\n      this.isSunk = true\n      return\n    } this.hitCount++\n  }\n}\n\nfunction createShip (length) {\n  console.log('ship module')\n  const ship = Object.create(shipMethods)\n  ship.length = length\n  ship.hitCount = 0\n  ship.isSunk = false\n  return ship\n}\n\n// const smallShip = createShip(2)\n// const medShip = createShip(3)\n// const largeShip = createShip(5)\n// console.log(smallShip.randomFunction())\n// console.log(medShip)\n// largeShip.hit()\n// largeShip.hit()\n// // console.log(largeShip)\n\n\n\n\n//# sourceURL=webpack://battleship/./src/ship.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"createShip\": () => (/* binding */ createShip),\n/* harmony export */   \"shipMethods\": () => (/* binding */ shipMethods)\n/* harmony export */ });\nconst shipMethods = {\n  hitAndSink () {\n    if (this.hitCount >= this.length) {\n      this.isSunk = true\n      return\n    } this.hitCount++\n  }\n}\n\nfunction createShip (length) {\n  const ship = Object.create(shipMethods)\n  ship.length = length\n  ship.hitCount = 0\n  ship.isSunk = false\n  return ship\n}\n\n\n\n\n//# sourceURL=webpack://battleship/./src/ship.js?");
 
 /***/ })
 
