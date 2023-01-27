@@ -1,7 +1,17 @@
+// eslint-disable-next-line no-unused-vars
 import _ from 'lodash'
-import { shipMethods, createShip } from './ship'
+import { createShip } from './ship'
 
-shipMethods()
-createShip()
-
+const smallShip = createShip(2)
+const medShip = createShip(3)
+const largeShip = createShip(5)
+console.log(smallShip.randomFunction())
+console.log(medShip)
+largeShip.hitAndSink()
+largeShip.hitAndSink()
+largeShip.hitAndSink()
+largeShip.hitAndSink()
+largeShip.hitAndSink()
+largeShip.hitAndSink()
+console.log(largeShip)
 console.log('index.js')
