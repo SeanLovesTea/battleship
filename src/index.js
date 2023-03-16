@@ -19,22 +19,58 @@ const compSquare = []
 createBoard(userGrid, userSquare)
 createBoard(compGrid, compSquare)
 
-const smallShip = createShip(2)
-const medShip = createShip(3)
-const largeShip = createShip(5)
+const destroyer = createShip(2, 'destroyer')
+const submarine = createShip(3, 'submarine')
+const cruiser = createShip(3, 'cruiser')
+const battleship = createShip(4, 'battleship')
+const carrier = createShip(5, 'carrier')
+const shipArr = [destroyer, submarine, cruiser, battleship, carrier]
 
-console.log(smallShip)
-console.log(medShip)
+function placeComputerShips (shipName, shipLength) {
 
-largeShip.hitAndSink()
-largeShip.hitAndSink()
-largeShip.hitAndSink()
-largeShip.hitAndSink()
-largeShip.hitAndSink()
-largeShip.hitAndSink()
+  const randomIndex = Math.floor(Math.random() * 100)
 
-console.log(largeShip)
+  let validIndex = randomIndex <= (100 - shipLength) ? randomIndex : (100 - shipLength)
 
-console.log(userGrid)
+  let moreValidindex = [...validIndex + '']
+  
+  if(moreValidindex[1] === '0' ) {
+    validIndex = validIndex + 1
+  }
+  else if (moreValidindex[1] === undefined) {
+    if(Number(moreValidindex[0]) + Number(shipLength) > 10) {
+      validIndex = validIndex - shipLength
+    }
+  }
+  else if(Number(moreValidindex[1]) + Number(shipLength) > 10 ) {
+    let newNum = Number(moreValidindex[1] - shipLength)
+    validIndex = Number(`${moreValidindex[0]}${newNum}`)
+  }
 
-console.log(largeShip)
+  validIndex === 0 ? validIndex + 1 : validIndex
+
+  let shipCoord = []
+ 
+
+    for (let i = 0; i < shipLength; i++) {
+      shipCoord.push(compSquare[validIndex + i - 1])
+          // compSquare[validIndex + i - 1].classList.add(shipName)
+          // compSquare[validIndex + i - 1].classList.add('taken')
+  }
+  const notTaken = shipCoord.every(ship => !ship.classList.contains('taken'))
+  console.log(shipCoord)
+  if ( shipCoord.every(ship => !ship.classList.contains('taken')) ) {
+    shipCoord.forEach(ship => {
+      ship.classList.add(shipName)
+      ship.classList.add('taken')
+    })
+  } else {
+    placeComputerShips(shipName, shipLength)
+  }
+}
+shipArr.forEach(ship => placeComputerShips (ship.name, ship.length))
+function playGame () {  
+  console.log('playing game')
+}
+
+export { playGame }

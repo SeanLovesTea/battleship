@@ -5,6 +5,7 @@
 }
 
 .battleship-grid {
+  
   margin: 2vmin;
   display: grid;
   background-color: hsl(200, 100%, 50%);
@@ -12,5 +13,25 @@
   grid-template-columns: repeat(10, 4.6vmin);
 }
 .square {
+  box-sizing: border-box;
   border: solid 1px red;
+}
+.square:hover {
+  background-color: hsl(200, 100%, 80%);;
+}
+
+.destroyer {
+  background-color: brown;
+}
+.submarine {
+  background-color: green;
+}
+.cruiser {
+  background-color: blue;
+}
+.battleship {
+  background-color: purple;
+}
+.carrier {
+  background-color: yellow;
 }
