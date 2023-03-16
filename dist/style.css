@@ -16,6 +16,12 @@
   box-sizing: border-box;
   border: solid 1px red;
 }
+.target-hit{
+  background-color: rgb(170, 103, 59)!important;
+}
+.target-miss {
+  background-color: grey;
+}
 .square:hover {
   background-color: hsl(200, 100%, 80%);;
 }

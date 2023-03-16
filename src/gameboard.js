@@ -8,8 +8,8 @@ export default function createBoard (grid, squares) {
     square.innerHTML = i + 1
     grid.appendChild(square)
     squares.push(square)
-    squares[i].addEventListener('click', () => {
-      console.log(square)
-    })
+    // squares[i].addEventListener('click', () => {
+    //   console.log(square)
+    // })
   }
 }

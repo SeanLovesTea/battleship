@@ -1,9 +1,10 @@
 const shipMethods = {
   hitAndSink () {
+    this.hitCount++
     if (this.hitCount >= this.length) {
       this.isSunk = true
       return
-    } this.hitCount++
+    } 
   }
 }
 

@@ -2,6 +2,7 @@
 import _ from 'lodash'
 import { createShip } from './ship'
 import createBoard from './gameboard'
+import { check } from 'prettier'
 
 const container = document.querySelector('.container')
 const userGrid = document.createElement('div')
@@ -29,37 +30,43 @@ const shipArr = [destroyer, submarine, cruiser, battleship, carrier]
 function placeComputerShips (shipName, shipLength) {
 
   const randomIndex = Math.floor(Math.random() * 100)
+  const isHorizontal = Math.random() < 0.5
+  console.log(isHorizontal)
 
   let validIndex = randomIndex <= (100 - shipLength) ? randomIndex : (100 - shipLength)
 
-  let moreValidindex = [...validIndex + '']
+  let splitValidindex = [...validIndex + '']
   
-  if(moreValidindex[1] === '0' ) {
+  if(splitValidindex[1] === '0' ) {
     validIndex = validIndex + 1
   }
-  else if (moreValidindex[1] === undefined) {
-    if(Number(moreValidindex[0]) + Number(shipLength) > 10) {
+  else if (splitValidindex[1] === undefined) {
+    if(Number(splitValidindex[0]) + Number(shipLength) > 10) {
       validIndex = validIndex - shipLength
     }
   }
-  else if(Number(moreValidindex[1]) + Number(shipLength) > 10 ) {
-    let newNum = Number(moreValidindex[1] - shipLength)
-    validIndex = Number(`${moreValidindex[0]}${newNum}`)
+  else if(Number(splitValidindex[1]) + Number(shipLength) > 10 ) {
+    let newNum = Number(splitValidindex[1] - shipLength)
+    validIndex = Number(`${splitValidindex[0]}${newNum}`)
   }
 
-  validIndex === 0 ? validIndex + 1 : validIndex
+  validIndex === 0 ? validIndex = validIndex + 1 : validIndex
+  const inBounds = validIndex + (shipLength * 10) > 100
+  if(!isHorizontal && inBounds){
+    validIndex = validIndex - (shipLength * 10)
+  }
 
   let shipCoord = []
- 
 
-    for (let i = 0; i < shipLength; i++) {
+  for (let i = 0; i < shipLength; i++) {
+    if(isHorizontal){
       shipCoord.push(compSquare[validIndex + i - 1])
-          // compSquare[validIndex + i - 1].classList.add(shipName)
-          // compSquare[validIndex + i - 1].classList.add('taken')
+    } else shipCoord.push(compSquare[validIndex + i * 10 ])
   }
+
   const notTaken = shipCoord.every(ship => !ship.classList.contains('taken'))
-  console.log(shipCoord)
-  if ( shipCoord.every(ship => !ship.classList.contains('taken')) ) {
+  
+  if ( notTaken ) {
     shipCoord.forEach(ship => {
       ship.classList.add(shipName)
       ship.classList.add('taken')
@@ -68,9 +75,45 @@ function placeComputerShips (shipName, shipLength) {
     placeComputerShips(shipName, shipLength)
   }
 }
+
 shipArr.forEach(ship => placeComputerShips (ship.name, ship.length))
+
 function playGame () {  
   console.log('playing game')
+}
+compSquare.forEach(square => {
+  square.addEventListener('click',handleGuess)
+})
+
+let sunkShips = []
+
+function handleGuess (e) {
+  
+  let shipName
+  let square = e.target
+
+  if( square.classList.contains('taken') ){
+
+    shipName = square.classList[1]
+    let shipArrIndex = shipArr.findIndex(ship => ship.name === shipName)
+    let targetShip = shipArr[shipArrIndex]
+
+    targetShip.hitAndSink ()
+    square.classList.add('target-hit')
+
+    if(targetShip.isSunk === true){
+      sunkShips.push(targetShip)
+      console.log(" You sunk the " + shipName)
+      checkWin()
+    }
+  }else
+  square.classList.add('target-miss')
+  square.removeEventListener ('click', handleGuess)
+}
+
+function checkWin () {
+  if(sunkShips.length === shipArr.length)
+    console.log("=================You Win==================")
 }
 
 export { playGame }
