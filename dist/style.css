@@ -1,11 +1,10 @@
-.container {
+.container, .ui-container {
   display: flex;
   justify-content: center;
   width: 100%;
 }
 
 .battleship-grid {
-  
   margin: 2vmin;
   display: grid;
   background-color: hsl(200, 100%, 50%);
@@ -15,6 +14,7 @@
 .square {
   box-sizing: border-box;
   border: solid 1px red;
+  cursor: pointer;
 }
 .target-hit{
   background-color: rgb(170, 103, 59)!important;
@@ -23,7 +23,7 @@
   background-color: grey;
 }
 .square:hover {
-  background-color: hsl(200, 100%, 80%);;
+  background-color: rgb(53, 53, 53)
 }
 
 .destroyer {
