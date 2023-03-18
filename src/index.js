@@ -7,10 +7,12 @@ import { check } from 'prettier'
 const container = document.querySelector('.container')
 const userGrid = document.createElement('div')
 const compGrid = document.createElement('div')
-const placerBTN = document.querySelector('.placerBTN')
-  placerBTN.addEventListener('click', placeShips)
+const startBtn = document.querySelector('.placerBTN')
 const flipBTN = document.querySelector('.flipBTN')
-  flipBTN.addEventListener('click', flipShips)
+const turnDisplay = document.querySelector('.turn-display span')
+const infoDisplay = document.querySelector('.info-display span')
+
+startBtn.addEventListener('click', startGame)
 
 userGrid.classList.add('grid-user')
 userGrid.classList.add('battleship-grid')
@@ -31,6 +33,7 @@ const cruiser = createShip(3, 'cruiser')
 const battleship = createShip(4, 'battleship')
 const carrier = createShip(5, 'carrier')
 const shipArr = [destroyer, submarine, cruiser, battleship, carrier]
+const placedShipsContainer = [destroyer, submarine, cruiser, battleship, carrier]
 
 function validatePlacement (startIndex, shipLength, isHorizontal, user) {
 
@@ -103,78 +106,86 @@ function placeComputerShips (shipName, shipLength, startIndex) {
   }
 }
 
-shipArr.forEach(ship => placeComputerShips (ship.name, ship.length))
+function startGame () { 
+  flipBTN.addEventListener('click', flipShips)
 
-function playGame () {  
-  console.log('playing game')
+  userBoard.forEach(square => {
+    square.addEventListener('click', placeShips)})
+
+  compBoard.forEach(square => {
+    square.addEventListener('click',handleGuess)})  
+
+  shipArr.forEach(ship => placeComputerShips (ship.name, ship.length))
 }
-compBoard.forEach(square => {
-  square.addEventListener('click',handleGuess)
-})
+function endGame () {
+  console.log("===end game ===")
+  flipBTN.removeEventListener('click', flipShips)
 
+  userBoard.forEach(square => {
+    square.removeEventListener('click', placeShips)})
 
+  compBoard.forEach(square => {
+    square.removeEventListener('click',handleGuess)})  
+}
+
+let sunkShipsComp = []
+let sunkShipsUser = []
 
 function handleGuess (e) {
-  let sunkShips = []
+
   let shipName
   let square = e.target
 
   if( square.classList.contains('taken') ){
+    updateUi ('You hit a ship!') 
 
     shipName = square.classList[1]
     let shipArrIndex = shipArr.findIndex(ship => ship.name === shipName)
     let targetShip = shipArr[shipArrIndex]
-
-    targetShip.hitAndSink ()
+    targetShip.hitAndSink()
     square.classList.add('target-hit')
-
+    
     if(targetShip.isSunk === true){
-      sunkShips.push(targetShip)
-      console.log(" You sunk the " + shipName)
-      checkWin(sunkShips)
+      sunkShipsUser.push(targetShip)
+      updateUi (`You sunk the ${shipName}`)
+      console.log(sunkShipsUser)
+      checkWin(sunkShipsUser)
     }
-  }else
+
+  }else updateUi ('You missed!')
   square.classList.add('target-miss')
-  square.removeEventListener ('click', handleGuess)
+  
 }
-
+function updateUi (message) {
+  infoDisplay.textContent = message
+}
 function checkWin (sunkShips) {
-  if(sunkShips.length === shipArr.length)
-    console.log("=================You Win==================")
+  if(sunkShips.length === shipArr.length){
+    updateUi('You won')
+    endGame ()
+  }
 }
-
-userBoard.forEach(square => {
-  square.addEventListener('click', placeShips)
-})
 
 let isHorizontal = true
 let placementPhase = false
 
 function placeShips (e) {
 
-  let placedShipsContainer = shipArr
-  let ship = shipArr[0]
+  let ship = placedShipsContainer[0]
   let shipName = ship.name
-  console.log(userBoard[50], "===userboard===")
-  console.log(ship.length, "===ship===")
-
   let square = e.target
   let startIndex = Number(e.target.id)
   
   let validIndex = validatePlacement (startIndex, ship.length, isHorizontal, 'user')
 
-  console.log(validIndex,e.target.id, "===index and id===")
   let userCoord = []
-
   
     for( let i = 0; i < ship.length; i++){
       if(isHorizontal){
       userCoord.push(userBoard[validIndex + i -1 ])
-    } else userCoord.push(userBoard[validIndex - 1 + i * 10])
-    
-  }
+      } else userCoord.push(userBoard[validIndex - 1 + i * 10])
+    }
 
-  console.log(userCoord, "===usercoord===")
   const notTaken = userCoord.every(ship => !ship.classList.contains('taken'))
 
   if(notTaken){
@@ -185,21 +196,18 @@ function placeShips (e) {
       placedShipsContainer.shift()
   }
     
-    console.log(placedShipsContainer )
-    if( placedShipsContainer.length === 0){
-      console.log("=====all ships placed ====")
-      userBoard.forEach(square => {
-        square.removeEventListener('click', placeShips)
-      })
-      userBoard.forEach(square => {
-        square.removeEventListener('click', handleGuess)
-      })
-    }
-    console.log(userCoord)
+  if( placedShipsContainer.length === 0){
+    console.log("=====all ships placed ====")
+    userBoard.forEach(square => {
+      square.removeEventListener('click', placeShips)
+    })
+    userBoard.forEach(square => {
+      square.addEventListener('click', handleGuess)
+    })
+  }
 }
 function flipShips () {
   isHorizontal = !isHorizontal
-  console.log("flip ships",  isHorizontal)
 }
 
-export { playGame }
+export { startGame }

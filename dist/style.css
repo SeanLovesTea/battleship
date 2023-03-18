@@ -1,9 +1,14 @@
-.container, .ui-container {
+.container {
   display: flex;
   justify-content: center;
   width: 100%;
 }
-
+.ui-container {
+  padding: 1rem;
+}
+.display-container > * {
+  padding: 1rem 0;
+}
 .battleship-grid {
   margin: 2vmin;
   display: grid;
