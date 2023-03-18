@@ -34,9 +34,14 @@ const submarine = createShip(3, 'submarine')
 const cruiser = createShip(3, 'cruiser')
 const battleship = createShip(4, 'battleship')
 const carrier = createShip(5, 'carrier')
+const destroyerComp = createShip(2, 'destroyer')
+const submarineComp = createShip(3, 'submarine')
+const cruiserComp = createShip(3, 'cruiser')
+const battleshipComp = createShip(4, 'battleship')
+const carrierComp = createShip(5, 'carrier')
 const shipArr = [destroyer, submarine, cruiser, battleship, carrier]
-const compShipArr = [destroyer, submarine, cruiser, battleship, carrier]
-const placedShipsContainer = [destroyer, submarine, cruiser, battleship, carrier]
+const compShipArr = [destroyerComp, submarineComp, cruiserComp, battleshipComp, carrierComp]
+let placedShipsContainer = [destroyer, submarine, cruiser, battleship, carrier]
 
 function validatePlacement (startIndex, shipLength, isHorizontal, user) {
 
@@ -110,6 +115,7 @@ function placeComputerShips (shipName, shipLength, startIndex) {
 }
 
 function startGame () { 
+  startBtn.textContent = 'Restart Game'
   flipBTN.addEventListener('click', flipShips)
 
   userBoard.forEach(square => {
@@ -124,10 +130,20 @@ function startGame () {
 
 function endGame () {
   console.log("===end game ===")
+  startBtn.textContent = 'Play Again'
   flipBTN.removeEventListener('click', flipShips)
   removeUserBoardListeners ()
   removeCompBoardListeners ()
+  startBtn.removeEventListener('click', startGame)
+  startBtn.addEventListener('click', )
 }
+
+
+function addCompBoardListeners () {
+  compBoard.forEach(square => {
+    square.addEventListener('click',handleGuess)})
+}
+
 function removeUserBoardListeners () {
   userBoard.forEach(square => {
     square.removeEventListener('click', placeShips)})
@@ -139,47 +155,46 @@ function removeCompBoardListeners () {
 let userTurn = true
 
 function setTurn () {
+  removeCompBoardListeners()
   userTurn = !userTurn
   if(userTurn){
+    addCompBoardListeners ()
     turnDisplay.textContent = 'Your turn'
   }else setTimeout(() => {
-    compGuess()}, 4000)
-  turnDisplay.textContent = 'The Computers turn'
-
-  
+    compGuess()}, 2000), turnDisplay.textContent = 'The Computers turn'
+ 
 }
 
-let sunkShipsComp = []
-let sunkShipsUser = []
-
 function handleGuess (e) {
-
+  const square = e.target
   let shipName
-  let square = e.target
+
+  if(square.classList.contains('target-miss')
+  || square.classList.contains('target-hit')
+  ){return}
   
   if( square.classList.contains('taken') ){
     updateUi ('You hit a ship!') 
 
     shipName = square.classList[1]
-    let shipArrIndex = shipArr.findIndex(ship => ship.name === shipName)
-    let targetShip = shipArr[shipArrIndex]
+    const shipArrIndex = shipArr.findIndex(ship => ship.name === shipName)
+    const targetShip = shipArr[shipArrIndex]
     targetShip.hitAndSink()
     square.classList.add('target-hit')
     
     if(targetShip.isSunk === true){
-      sunkShipsUser.push(targetShip)
       updateUi (`You sunk the ${shipName}`)
-      console.log(sunkShipsUser)
-      checkWin(sunkShipsUser)
+      checkWin()
     }
+    
     return
   }else updateUi ('You missed!')
   square.classList.add('target-miss')
+  
   setTurn ()
 }
 
 function compGuess () {
-  setTimeout(()=> {}, 4000)
   let shipName
   let square = userBoard[Math.floor(Math.random() * 100)]
   
@@ -191,17 +206,16 @@ function compGuess () {
     let targetShip = compShipArr[shipArrIndex]
     targetShip.hitAndSink()
     square.classList.add('target-hit')
-    
+    console.log(compShipArr)
+    console.log(shipArr)
     if(targetShip.isSunk === true){
-      sunkShipsComp.push(targetShip)
       updateUi (`You sunk the ${shipName}`)
-      console.log(sunkShipsComp)
-      checkWin(sunkShipsComp)
+      checkWin()
     }
 
-    setTimeout(() => {
-      compGuess()}, 4000)
-  }else updateUi ('The Computer missed!')
+    setTurn ()
+
+  }else updateUi ('The Computer missed!'),
   square.classList.add('target-miss')
   
   setTurn ()
@@ -210,12 +224,21 @@ function compGuess () {
 function updateUi (message) {
   infoDisplay.textContent = message
 }
+
 function checkWin (sunkShips) {
-  if(sunkShips.length === shipArr.length){
+  console.log(shipArr, "shipArr")
+  let userWin = shipArr.every(item => item.isSunk === true)
+  let compWin = compShipArr.every(item => item.isSunk === true)
+  if(userWin){
     updateUi('You won')
+    endGame ()
+  }else if (compWin){
+    updateUi('You Lost')
     endGame ()
   }
 }
+    
+
 
 let isHorizontal = true
 let placementPhase = true
