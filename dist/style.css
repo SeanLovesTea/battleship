@@ -12,13 +12,14 @@
 .battleship-grid {
   margin: 2vmin;
   display: grid;
+  gap: 1px;
   background-color: hsl(200, 100%, 50%);
   grid-template-rows: repeat(10, 4.6vmin);
   grid-template-columns: repeat(10, 4.6vmin);
 }
 .square {
   box-sizing: border-box;
-  border: solid 1px red;
+
   cursor: pointer;
 }
 .target-hit{
@@ -27,9 +28,9 @@
 .target-miss {
   background-color: grey;
 }
-.square:hover {
-  background-color: rgb(53, 53, 53)
-}
+/* .square:hover {
+  background-color: rgb(168, 169, 226)
+} */
 
 .destroyer {
   background-color: brown;

@@ -5,7 +5,7 @@ export default function createBoard (grid, squares) {
     const square = document.createElement('div')
     square.classList = 'square'
     square.id = i + 1
-    square.innerHTML = i + 1
+    // square.innerHTML = i + 1
     grid.appendChild(square)
     squares.push(square)
     // squares[i].addEventListener('click', () => {
