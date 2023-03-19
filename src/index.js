@@ -11,6 +11,8 @@ const startBtn = document.querySelector('.placerBTN')
 const flipBTN = document.querySelector('.flipBTN')
 const turnDisplay = document.querySelector('.turn-display span')
 const infoDisplay = document.querySelector('.info-display span')
+const winnerDisplay = document.querySelector('.winner-display span')
+const shadow = document.createElement('div')
 
 turnDisplay.textContent = 'Start Game'
 
@@ -41,7 +43,7 @@ const battleshipComp = createShip(4, 'battleship')
 const carrierComp = createShip(5, 'carrier')
 const shipArr = [destroyer, submarine, cruiser, battleship, carrier]
 const compShipArr = [destroyerComp, submarineComp, cruiserComp, battleshipComp, carrierComp]
-let placedShipsContainer = [destroyer, submarine, cruiser, battleship, carrier]
+const placedShipsContainer = [destroyer, submarine, cruiser, battleship, carrier]
 
 function validatePlacement (startIndex, shipLength, isHorizontal, user) {
 
@@ -114,8 +116,13 @@ function placeComputerShips (shipName, shipLength, startIndex) {
   }
 }
 
+let placementPhase = false
+
 function startGame () { 
-  startBtn.textContent = 'Restart Game'
+  placementPhase = true
+  startBtn.textContent = 'End Game'
+  startBtn.removeEventListener('click', startGame)
+  startBtn.addEventListener('click', endGame)
   flipBTN.addEventListener('click', flipShips)
 
   userBoard.forEach(square => {
@@ -126,6 +133,7 @@ function startGame () {
 
   turnDisplay.textContent = 'Your Turn'  
   infoDisplay.textContent = 'Place your ships'
+  toggleShadow()
 }
 
 function endGame () {
@@ -134,10 +142,28 @@ function endGame () {
   flipBTN.removeEventListener('click', flipShips)
   removeUserBoardListeners ()
   removeCompBoardListeners ()
-  startBtn.removeEventListener('click', startGame)
-  startBtn.addEventListener('click', )
+  startBtn.addEventListener('click', resetGameState)
+  turnDisplay.textContent = 'Play Again?'
+  infoDisplay.textContent = 'The Game has ended'
 }
+function resetGameState () {
+  winnerDisplay.textContent = ''
 
+  compBoard.every(square => square.className = "square")
+  userBoard.every(square => square.className = "square")
+
+  shipArr.forEach(ship => ship.hitCount = 0)
+  shipArr.forEach(ship => ship.isSunk = false)
+
+  compShipArr.forEach(ship => ship.hitCount = 0)
+  compShipArr.forEach(ship => ship.isSunk = false)
+
+  placedShipsContainer.length = 0
+  placedShipsContainer.push(destroyer, submarine, cruiser, battleship, carrier)
+  startBtn.removeEventListener('click', resetGameState)
+  startBtn.addEventListener('click', startGame)
+  startGame()
+}
 
 function addCompBoardListeners () {
   compBoard.forEach(square => {
@@ -230,26 +256,23 @@ function checkWin (sunkShips) {
   let userWin = shipArr.every(item => item.isSunk === true)
   let compWin = compShipArr.every(item => item.isSunk === true)
   if(userWin){
-    updateUi('You won')
+    winnerDisplay.textContent = 'You won!'
     endGame ()
   }else if (compWin){
-    updateUi('You Lost')
+    winnerDisplay.textContent = 'The Computer won :('
     endGame ()
   }
 }
     
-
-
 let isHorizontal = true
-let placementPhase = true
 
 function placeShips (e) {
- 
+  console.log(placedShipsContainer,"====placeedsguo======")
   let ship = placedShipsContainer[0]
   let shipName = ship.name
   let square = e.target
   let startIndex = Number(e.target.id)
-  
+
   let validIndex = validatePlacement (startIndex, ship.length, isHorizontal, 'user')
 
   let userCoord = []
@@ -279,8 +302,46 @@ function placeShips (e) {
   if(!placementPhase){
     shipArr.forEach(ship => placeComputerShips (ship.name, ship.length))
     infoDisplay.textContent = 'Make your move'
+    toggleShadow()
+  }  
+}
+function toggleShadow(){
+  if(placementPhase) {
+    userBoard.forEach(square => {
+      square.addEventListener('mouseover', shipOnPointer )})  
+    userBoard.forEach(square => {
+      square.addEventListener('mouseout', shipOnPointerOut )})  
+  }else userBoard.forEach(square => {
+    square.removeEventListener('mouseover', shipOnPointer )}),  
+  userBoard.forEach(square => {
+    square.removeEventListener('mouseout', shipOnPointerOut )})  
+
+}
+
+function shipOnPointerOut (e) {
+  console.log("===========pointer out===========")
+  const length = placedShipsContainer[0].length
+  const index = e.target.id - 1
+  if(isHorizontal){
+  for (let i = 0 ; i < length ; i++) {
+    userBoard[index + i].classList.remove('square-hover')
   }
-    
+}else for (let i = 0 ; i < length ; i++) {
+  userBoard[index + i * 10].classList.remove('square-hover')
+}
+}
+function shipOnPointer (e) {
+  // square.classList.add('square-hover')
+  console.log("e===============", )
+  const length = placedShipsContainer[0].length
+  const index = e.target.id - 1
+  if(isHorizontal){
+    for (let i = 0 ; i < length ; i++) {
+      userBoard[index + i].classList.add('square-hover')
+    }
+  } else for (let i = 0 ; i < length ; i++) {
+    userBoard[index + i * 10].classList.add('square-hover')
+  }
 }
 function flipShips () {
   isHorizontal = !isHorizontal

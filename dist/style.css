@@ -31,7 +31,9 @@
 /* .square:hover {
   background-color: rgb(168, 169, 226)
 } */
-
+.square-hover {
+  background-color: rgb(168, 169, 226)
+}
 .destroyer {
   background-color: brown;
 }
